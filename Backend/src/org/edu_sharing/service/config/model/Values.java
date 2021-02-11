@@ -29,6 +29,7 @@ public class Values implements Serializable {
 	@XmlElement	public Boolean nodeReport;
 	@XmlElement	public Boolean branding;
 	@XmlElement	public Boolean publishingNotice;
+	@XmlElement	public Boolean licenseMandatory;
 	@XmlElement	public String siteTitle;
 	@XmlElement	public String userDisplayName;
 	@XmlElement	public String userSecondaryDisplayName;
