@@ -241,6 +241,10 @@ export class WorkspaceLicenseComponent  {
   }
 
   public async saveLicense(callback: Function = null) {
+      if(this.isLicenseMandatory() && !this.getLicenseProperty()){
+          this.toast.error(null, 'TOAST.FIELD_REQUIRED', { name: this.translate.instant('NODE.'+RestConstants.CCM_PROP_LICENSE) });
+          return;
+      }
       if(this.type === 'CUSTOM' && !this.rightsDescription.trim()){
           this.toast.error(null, 'LICENSE.DESCRIPTION_REQUIRED');
           return;
@@ -583,4 +587,13 @@ export class WorkspaceLicenseComponent  {
       if (a.toLowerCase() > b.toLowerCase()) return 1;
       return 0;
     }
+
+    /**
+     * Check if license is mandatory
+     * @return true | false
+     */
+    isLicenseMandatory(){
+        return this.config.instant('licenseMandatory',false);
+    }
+
 }

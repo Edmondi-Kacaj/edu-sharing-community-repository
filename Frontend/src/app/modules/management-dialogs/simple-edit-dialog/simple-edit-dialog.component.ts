@@ -96,8 +96,12 @@ export class SimpleEditDialogComponent  {
                 this.toast.closeModalDialog();
               });
         }, error => {
-          this.toast.error(error);
-          this.toast.closeModalDialog();
+            if (error.isLicenseEmpty)
+             this.toast.error(null, 'TOAST.FIELD_REQUIRED', { name: this.translate.instant('NODE.'+RestConstants.CCM_PROP_LICENSE) });
+            else
+             this.toast.error(error);
+
+            this.toast.closeModalDialog();
         });
       },error => {
         this.toast.error(error);

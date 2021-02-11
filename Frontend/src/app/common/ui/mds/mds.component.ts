@@ -734,6 +734,12 @@ export class MdsComponent {
         if (this.currentNodes) {
             properties = this.currentNodes[0].properties;
         }
+
+        if (this.isLicenseMandatory() && !callback && this.currentNodes[0].properties[RestConstants.CCM_PROP_LICENSE][0]==='NONE'){
+            this.toast.error(null, 'TOAST.FIELD_REQUIRED', { name: this.translate.instant('NODE.'+RestConstants.CCM_PROP_LICENSE) });
+            return;
+        }
+
         const values = this.getValues(properties);
         // check if file extension changed and warn
         if (!force) {
@@ -1041,7 +1047,7 @@ export class MdsComponent {
             `
                   <input type="checkbox" id="` +
             id +
-            `" 
+            `"
                     onchange="` +
             this.getWindowComponent() +
             `.toggleBulk('` +
@@ -1605,7 +1611,7 @@ export class MdsComponent {
             (widget.placeholder ? widget.placeholder : '') +
             `" class="suggestInput ` +
             css +
-            `" 
+            `"
             onkeyup="` +
             this.getWindowComponent() +
             `.openSuggestions('` +
@@ -1644,7 +1650,7 @@ export class MdsComponent {
         }
         if (openCallback) {
             html +=
-                `<a class="btn-flat suggestOpen" 
+                `<a class="btn-flat suggestOpen"
               onclick="` +
                 openCallback +
                 `"
@@ -2381,7 +2387,7 @@ export class MdsComponent {
                       <a tabindex="0"
                       onclick="document.getElementById('` +
                 this.getDomId('preview-select') +
-                `').click()" 
+                `').click()"
                       onkeydown="if(event.keyCode==13)this.click();" class="btn-circle"><i class="material-icons" aria-label="` +
                 this.translate.instant('WORKSPACE.EDITOR.REPLACE_PREVIEW') +
                 `">file_upload</i></a>
@@ -2394,7 +2400,7 @@ export class MdsComponent {
                 `
                           onclick="` +
                 this.getWindowComponent() +
-                `.deletePreview()" 
+                `.deletePreview()"
                           onkeydown="if(event.keyCode==13) this.click();"
                           class="btn-circle"><i class="material-icons" aria-label="` +
                 this.translate.instant('WORKSPACE.EDITOR.DELETE_PREVIEW') +
@@ -3265,6 +3271,14 @@ export class MdsComponent {
             }
         }
         return properties;
+    }
+
+    /**
+     * Check if license is mandatory
+     * @return true | false
+     */
+    isLicenseMandatory(){
+        return this.config.instant('licenseMandatory',false);
     }
 }
 export enum BulkBehavior {

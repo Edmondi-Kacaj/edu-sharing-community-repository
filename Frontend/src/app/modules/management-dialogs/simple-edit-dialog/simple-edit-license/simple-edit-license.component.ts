@@ -93,6 +93,14 @@ export class SimpleEditLicenseComponent {
            this.initialMode !== this.modeGroup.value;
   }
   save() : Observable<any> {
+    // License declare as mandatory cannot be empty
+    if(this.isLicenseMandatory() && this.licenseGroup.value ==='NONE'){
+      return new Observable<void>((observer) => {
+          observer.error({isLicenseEmpty:true});// pass license as error
+          return;
+      });
+    }
+
     if (!this.isDirty()) {
       return new Observable<void>((observer) => {
         observer.next();
@@ -192,5 +200,13 @@ export class SimpleEditLicenseComponent {
 
     isCCAttributableLicense() {
         return this.licenseGroup && this.licenseGroup.value && this.licenseGroup.value.startsWith('CC_BY');
+    }
+
+    /**
+     * Check if license is mandatory
+     * @return true | false
+     */
+    isLicenseMandatory(){
+      return this.configService.instant('licenseMandatory',false);
     }
 }
