@@ -741,6 +741,11 @@ export class MdsComponent {
         }
 
         const values = this.getValues(properties);
+        const author=new VCard(values[RestConstants.CCM_PROP_LIFECYCLECONTRIBUTER_AUTHOR][0])
+        if (this.isAuthorMandatory() && !callback && (!author.givenname || !author.surname)) {
+            this.toast.error(null, 'TOAST.FIELD_REQUIRED', { name: this.translate.instant('NODE.'+RestConstants.CCM_PROP_LIFECYCLECONTRIBUTER_AUTHOR)});
+            return;
+        }
         // check if file extension changed and warn
         if (!force) {
             // for regular nodes
@@ -3279,6 +3284,13 @@ export class MdsComponent {
      */
     isLicenseMandatory(){
         return this.config.instant('licenseMandatory',false);
+    }
+    /**
+     * Check if Author is mandatory
+     * @return true | false
+     */
+    isAuthorMandatory(){
+        return this.config.instant('authorMandatory',false);
     }
 }
 export enum BulkBehavior {

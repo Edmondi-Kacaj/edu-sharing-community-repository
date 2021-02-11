@@ -242,6 +242,7 @@
         "virtual:usagecount": "usage count",
         "ccm:author_freetext": "General Author information",
         "ccm:lifecyclecontributer_authorFN": "author",
+        "ccm:lifecyclecontributer_author": "author",
         "ccm:wf_status": "status",
         "ccm:eaf_productionyear": "Production year",
         "counts": {

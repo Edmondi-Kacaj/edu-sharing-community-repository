@@ -1,10 +1,16 @@
 import {Component, Input, EventEmitter, Output, ViewChild, ElementRef} from '@angular/core';
-import {DialogButton, RestIamService, RestNodeService, RestSearchService, VCardResult} from "../../../core-module/core.module";
+import {
+    ConfigurationService,
+    DialogButton,
+    RestIamService,
+    RestNodeService,
+    RestSearchService,
+    VCardResult
+} from "../../../core-module/core.module";
 import {RestConstants} from "../../../core-module/core.module";
 import {NodeWrapper,Node} from "../../../core-module/core.module";
 import {VCard} from "../../../core-module/ui/VCard";
 import {Toast} from "../../../core-ui-module/toast";
-import {Translation} from "../../../core-ui-module/translation";
 import {TranslateService} from "@ngx-translate/core";
 import {DateHelper} from "../../../core-ui-module/DateHelper";
 import {trigger} from "@angular/animations";
@@ -185,6 +191,12 @@ export class WorkspaceContributorComponent  {
       }
       properties["ccm:lifecyclecontributer_"+role]=prop;
     }
+    if (this.isAuthorMandatory() && !properties[RestConstants.CCM_PROP_LIFECYCLECONTRIBUTER_AUTHOR][0]) {
+        this.toast.error(null, 'TOAST.FIELD_REQUIRED',
+            { name: this.translate.instant('NODE.'+RestConstants.CCM_PROP_LIFECYCLECONTRIBUTER_AUTHOR) });
+        this.onLoading.emit(false);
+        return;
+    }
     for(let role of this.rolesMetadata){
       let prop=[];
       for(let vcard of this.contributorMetadata[role]){
@@ -213,6 +225,7 @@ export class WorkspaceContributorComponent  {
     private searchService:RestSearchService,
     private iamService:RestIamService,
     private translate:TranslateService,
+    private config : ConfigurationService,
     private toast:Toast,
   ) {
     this.suggestionPersons$ = this.fullName.pipe(
@@ -264,4 +277,12 @@ export class WorkspaceContributorComponent  {
     }
 
   }
+
+    /**
+     * Check if Author is mandatory
+     * @return true | false
+     */
+    isAuthorMandatory() {
+        return this.config.instant('authorMandatory',false);
+    }
 }
