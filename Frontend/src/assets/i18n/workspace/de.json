@@ -191,6 +191,9 @@
                 "EXTEND_DESCRIPTION" : "Die eingestellten Berechtigungen werden zu den bestehenden Berechtigungen der ausgewählten Nutzer/Gruppen hinzugefügt.",
                 "REPLACE" : "Bestehende Berechtigungen ersetzen",
                 "REPLACE_DESCRIPTION" : "Die eingestellten Berechtigungen ersetzen die bisherigen Berechtigungen der ausgewählten Nutzer/Gruppen."
+            },
+            "ERROR": {
+                "PUBLISH_REQUIRED_FIELDS": "Autor und Lizenz können nicht leer sein"
             }
         },
         "INHERIT_DISABLED": "Rechtevererbung ist aktuell ausgeschaltet",

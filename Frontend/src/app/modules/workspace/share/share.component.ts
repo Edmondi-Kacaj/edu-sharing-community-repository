@@ -37,6 +37,7 @@ import { Toast } from '../../../core-ui-module/toast';
 import { UIHelper } from '../../../core-ui-module/ui-helper';
 import {SharePublishComponent} from './share-publish/share-publish.component';
 import {NodeHelperService} from '../../../core-ui-module/node-helper.service';
+import {MatCheckboxChange} from "@angular/material/checkbox";
 
 @Component({
     selector: 'workspace-share',
@@ -261,7 +262,7 @@ export class WorkspaceShareComponent {
         if (this.currentPermissions) {
             this.originalPermissions = Helper.deepCopy(this.currentPermissions);
             this.setPermissions(this.currentPermissions.permissions);
-            this.inherited = this.currentPermissions.inherited;
+            this.isInherited(this.currentPermissions.inherited)
             this.showLink = false;
         } else {
             this.showLink = true;
@@ -278,8 +279,7 @@ export class WorkspaceShareComponent {
                     this.setPermissions(
                         permissions[0].permissions.localPermissions.permissions,
                     );
-                    this.inherited =
-                        permissions[0].permissions.localPermissions.inherited;
+                    this.isInherited(permissions[0].permissions.localPermissions.inherited)
                     setTimeout(()=>this.setInitialState());
                 }
                 this.toast.closeModalDialog();
@@ -835,6 +835,64 @@ export class WorkspaceShareComponent {
             (p) => p.authority.authorityName !== RestConstants.AUTHORITY_EVERYONE
         );
     }
+
+    onCheckInherit(event: any): void {
+        if (this.isLicenseMandatory() || this.isAuthorMandatory()) {
+            if (this.isLicenseEmpty() || this.isAuthorEmpty()) {
+                this.toast.error(null, this.translate.instant("WORKSPACE.SHARE.ERROR.PUBLISH_REQUIRED_FIELDS"));
+                event.preventDefaultEvent();
+            }
+        }
+    }
+
+    private isInherited(inherited: boolean) {
+        if (this.isLicenseMandatory() || this.isAuthorMandatory()) {
+            if (this.isLicenseEmpty() || this.isAuthorEmpty()) {
+                this.inherited = false
+            } else {
+                this.inherited = inherited;
+            }
+        }
+    }
+
+    /**
+     * Check if license is mandatory
+     * @return true | false | not exist return false
+     */
+    isLicenseMandatory() {
+        return this.config.instant('licenseMandatory', false);
+    }
+
+    /**
+     * Check if license is empty
+     * @return true | false | not exist return false
+     */
+    isLicenseEmpty() {
+        if (this._nodes == null || !this._nodes[0].properties[RestConstants.CCM_PROP_LICENSE]?.[0]) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Check if Author is mandatory
+     * @return true | false | not exist return false
+     */
+    isAuthorMandatory() {
+        return this.config.instant('authorMandatory', false);
+    }
+
+    /**
+     * Check if Author is empty
+     * @return true | false | not exist return false
+     */
+    isAuthorEmpty() {
+        if (this._nodes == null || !this._nodes[0].properties[RestConstants.CCM_PROP_LIFECYCLECONTRIBUTER_AUTHOR]?.[0]) {
+            return true;
+        }
+        return false;
+    }
+
 }
 /*
 class SearchData extends Subject<CompleterItem[]> implements CompleterData {

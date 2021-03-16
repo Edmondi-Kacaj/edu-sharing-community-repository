@@ -55,6 +55,7 @@
   </info-message>
   <div *ngIf="!inherited && mdsCompletion?.completed === mdsCompletion?.total" class="share-type">
     <mat-checkbox [(ngModel)]="shareModeDirect"
+                  (click)="onShareModeClick($event)"
                   (ngModelChange)="updateShareMode()"
                   value="direct">
       <app-multi-line-label>
@@ -67,6 +68,7 @@
       </app-multi-line-label>
     </mat-checkbox>
     <mat-checkbox [(ngModel)]="shareModeCopy"
+                  (click)="onShareModeClick($event)"
                   (ngModelChange)="$event ? doiActive = true : null; updateShareMode()"
                   [disabled]="!copyAllowed() || isCopy">
       <app-multi-line-label>

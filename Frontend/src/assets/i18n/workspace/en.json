@@ -164,6 +164,9 @@
                 "EXTEND_DESCRIPTION" : "The selected permissions will be added to the existing permissions of the user(s)/group(s). ",
                 "REPLACE" : "Overwrite existing permissions",
                 "REPLACE_DESCRIPTION" : "The selected permissions will replace the existing permissions of the user(s)/group(s)."
+            },
+            "ERROR": {
+                "PUBLISH_REQUIRED_FIELDS": "Author and License can not be empty"
             }
         },
         "INHERIT_DISABLED": "Inherition is currently disabled",

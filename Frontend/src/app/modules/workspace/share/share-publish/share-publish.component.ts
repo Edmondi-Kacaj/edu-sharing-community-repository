@@ -28,6 +28,8 @@ export class SharePublishComponent implements OnChanges {
   @Input() node: Node;
   @Input() permissions: Permission[];
   @Input() inherited: boolean;
+  @Input() isAuthorEmtpy: boolean;
+  @Input() isLicenseEmtpy: boolean;
   @Output() onDisableInherit = new EventEmitter<void>();
   @Output() onInitCompleted = new EventEmitter<void>();
   doiPermission: boolean;
@@ -253,6 +255,14 @@ export class SharePublishComponent implements OnChanges {
     this.doiActive = this.republish && this.doiPermission;
     this.updatePublishedVersions();
   }
+
+    onShareModeClick(event:any):void{
+      if (this.isAuthorEmtpy || this.isLicenseEmtpy) {
+          this.toast.error(null, this.translate.instant("WORKSPACE.SHARE.ERROR.PUBLISH_REQUIRED_FIELDS"));
+          event.preventDefaultEvent();
+      }
+    }
+
 }
 export enum ShareMode {
   Direct = 'direct',
