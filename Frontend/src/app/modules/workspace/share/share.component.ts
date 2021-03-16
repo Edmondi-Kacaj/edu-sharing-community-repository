@@ -815,8 +815,7 @@ export class WorkspaceShareComponent {
             permissionsCopy,
             this.notifyUsers && this.sendMessages,
             this.notifyMessage,
-            false,
-            false, // handle will always be created via publish component
+            false // handle will always be created via publish component
         ).subscribe(() => {
             observer.next();
             observer.complete();

@@ -188,7 +188,7 @@ export class SharePublishComponent implements OnChanges {
           if (this.doiPermission && !this.doiDisabled && this.doiActive) {
             console.log('create handle');
             this.nodeService.setNodePermissions(node.ref.id,
-                null, false, '', false, true
+                null, false, '', false
             ).subscribe(() => {
               observer.next(node);
               observer.complete();

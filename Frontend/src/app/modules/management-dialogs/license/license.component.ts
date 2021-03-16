@@ -414,7 +414,7 @@ export class WorkspaceLicenseComponent  {
             this.permissions.permissions.push(perm);
         }
         const permissions=RestHelper.copyAndCleanPermissions(this.permissions.permissions,this.permissions.inherited);
-        this.nodeApi.setNodePermissions(node.ref.id,permissions,false,'',false,this.allowDOI() && this.doiPermission && this.doiActive && this.release).subscribe(()=> {
+        this.nodeApi.setNodePermissions(node.ref.id,permissions,false,'',false).subscribe(()=> {
         },(error:any)=>this.toast.error(error));
     }
     private readPermissions(last:boolean) {
