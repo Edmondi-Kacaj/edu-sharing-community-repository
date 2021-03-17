@@ -836,10 +836,12 @@ export class WorkspaceShareComponent {
     }
 
     onCheckInherit(event: any): void {
+        console.log('onCheckInherit ==>'+(this.isLicenseMandatory() || this.isAuthorMandatory()))
         if (this.isLicenseMandatory() || this.isAuthorMandatory()) {
             if (this.isLicenseEmpty() || this.isAuthorEmpty()) {
                 this.toast.error(null, this.translate.instant("WORKSPACE.SHARE.ERROR.PUBLISH_REQUIRED_FIELDS"));
-                event.preventDefaultEvent();
+                // tslint:disable-next-line:no-unused-expression
+                event.preventDefaultEvent;
             }
         }
     }

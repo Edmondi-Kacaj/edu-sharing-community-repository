@@ -256,10 +256,12 @@ export class SharePublishComponent implements OnChanges {
     this.updatePublishedVersions();
   }
 
-    onShareModeClick(event:any):void{
+    onShareModeClick(event:any) {
+      console.log('onShareModeClick ==> '+(this.isAuthorEmtpy || this.isLicenseEmtpy))
       if (this.isAuthorEmtpy || this.isLicenseEmtpy) {
           this.toast.error(null, this.translate.instant("WORKSPACE.SHARE.ERROR.PUBLISH_REQUIRED_FIELDS"));
-          event.preventDefaultEvent();
+          // tslint:disable-next-line:no-unused-expression
+          event.preventDefaultEvent;
       }
     }
 
