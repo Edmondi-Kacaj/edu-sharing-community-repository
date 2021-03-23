@@ -836,7 +836,7 @@ export class WorkspaceShareComponent {
     }
 
     onCheckInherit(event: any): void {
-        if (this.isLicenseMandatory() || this.isAuthorMandatory()) {
+        if ((this.isLicenseMandatory() || this.isAuthorMandatory())&& !this._nodes[0].isDirectory) {
             if (this.isLicenseEmpty() || this.isAuthorEmpty()) {
                 this.toast.error(null, this.translate.instant('WORKSPACE.SHARE.ERROR.PUBLISH_REQUIRED_FIELDS'));
                 event.preventDefaultEvent();
@@ -845,7 +845,7 @@ export class WorkspaceShareComponent {
     }
 
     private isInherited(inherited: boolean) {
-        if (this.isLicenseMandatory() || this.isAuthorMandatory()) {
+        if ((this.isLicenseMandatory() || this.isAuthorMandatory())&& !this._nodes[0].isDirectory) {
             if (this.isLicenseEmpty() || this.isAuthorEmpty()) {
                 this.inherited = false
             } else {

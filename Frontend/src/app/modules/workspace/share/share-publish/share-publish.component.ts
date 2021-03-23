@@ -257,7 +257,7 @@ export class SharePublishComponent implements OnChanges {
   }
 
     onShareModeClick(event: any) {
-        if (this.isAuthorEmtpy || this.isLicenseEmtpy) {
+        if ((this.isAuthorEmtpy || this.isLicenseEmtpy) && !this.node.isDirectory) {
             this.toast.error(null, this.translate.instant('WORKSPACE.SHARE.ERROR.PUBLISH_REQUIRED_FIELDS'));
             event.preventDefaultEvent();
         }
