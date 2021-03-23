@@ -1,11 +1,3 @@
-<workspace-license
-  *ngIf="nodeLicense"
-  [nodes]="nodeLicense"
-  (onLoading)="globalProgress=$event"
-  (onCancel)="closeLicense()"
-  (openContributor)="nodeContributor=$event[0]"
-  (onDone)="updateLicense($event)"
-></workspace-license>
 <add-stream
   *ngIf="addNodesStream"
   [nodes]="addNodesStream"
@@ -196,6 +188,14 @@
                               (onFileSelected)="uploadFile($event)"
                               (onLinkSelected)="createUrlLink($event)"
 ></workspace-file-upload-select>
+<workspace-license
+  *ngIf="nodeLicense"
+  [nodes]="nodeLicense"
+  (onLoading)="globalProgress=$event"
+  (onCancel)="closeLicense()"
+  (openContributor)="nodeContributor=$event[0]"
+  (onDone)="updateLicense($event)"
+></workspace-license>
 <workspace-contributor *ngIf="nodeContributor"
                        [node]="nodeContributor"
                        (onLoading)="globalProgress=$event"
