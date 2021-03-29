@@ -1,4 +1,13 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnChanges,
+    OnInit,
+    Output,
+    SimpleChanges,
+    ViewChild
+} from '@angular/core';
 import {UIHelper} from "../../../../core-ui-module/ui-helper";
 import {Node, Permission} from '../../../../core-module/rest/data-object';
 import {RestConstants} from '../../../../core-module/rest/rest-constants';
@@ -32,6 +41,8 @@ export class SharePublishComponent implements OnChanges {
   @Input() isLicenseEmtpy: boolean;
   @Output() onDisableInherit = new EventEmitter<void>();
   @Output() onInitCompleted = new EventEmitter<void>();
+  @ViewChild('shareModeCopyRef') shareModeCopyRef: any;
+  @ViewChild('shareModeDirectRef') shareModeDirectRef: any;
   doiPermission: boolean;
   initialState: {
     copy: boolean,
@@ -257,9 +268,11 @@ export class SharePublishComponent implements OnChanges {
   }
 
     onShareModeClick(event: any) {
-        if ((this.isAuthorEmtpy || this.isLicenseEmtpy) && !this.node.isDirectory) {
-            this.toast.error(null, this.translate.instant('WORKSPACE.SHARE.ERROR.PUBLISH_REQUIRED_FIELDS'));
-            event.preventDefaultEvent();
+        if (!event._checked) {
+            if ((this.isAuthorEmtpy || this.isLicenseEmtpy) && !this.node.isDirectory) {
+                this.toast.error(null, this.translate.instant('WORKSPACE.SHARE.ERROR.PUBLISH_REQUIRED_FIELDS'));
+                event.preventDefaultEvent();
+            }
         }
     }
 

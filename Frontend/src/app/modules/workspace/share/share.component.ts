@@ -50,6 +50,7 @@ import {MatCheckboxChange} from "@angular/material/checkbox";
 })
 export class WorkspaceShareComponent {
     @ViewChild('publish') publishComponent: SharePublishComponent;
+    @ViewChild('inheritRef') inheritRef: any;
     @Input() sendMessages = true;
     @Input() sendToApi = true;
     @Input() currentPermissions: LocalPermissions = null;
@@ -835,23 +836,41 @@ export class WorkspaceShareComponent {
         );
     }
 
+    /**
+     * function that prevent sharing document if author and license are not set
+     * @param event mat-checkbox Ref
+     *
+     */
     onCheckInherit(event: any): void {
-        if ((this.isLicenseMandatory() || this.isAuthorMandatory())&& !this._nodes[0].isDirectory) {
-            if (this.isLicenseEmpty() || this.isAuthorEmpty()) {
+        if (!event._checked) {
+            if (this.checkInheritance()) {
                 this.toast.error(null, this.translate.instant('WORKSPACE.SHARE.ERROR.PUBLISH_REQUIRED_FIELDS'));
                 event.preventDefaultEvent();
             }
         }
     }
 
+    /**
+     * function tha init inheritance
+     * @param inherited boolean
+     *
+     */
     private isInherited(inherited: boolean) {
-        if ((this.isLicenseMandatory() || this.isAuthorMandatory())&& !this._nodes[0].isDirectory) {
-            if (this.isLicenseEmpty() || this.isAuthorEmpty()) {
+            if (this.checkInheritance()) {
                 this.inherited = false
             } else {
                 this.inherited = inherited;
             }
+    }
+
+    /**
+     * Check if material meet the  condition to be inherited
+     */
+    private checkInheritance():boolean{
+        if ((this.isLicenseMandatory() || this.isAuthorMandatory())&& !this._nodes[0].isDirectory) {
+            return (this.isLicenseEmpty() || this.isAuthorEmpty());
         }
+        return false
     }
 
     /**
