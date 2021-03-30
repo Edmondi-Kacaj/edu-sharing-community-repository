@@ -23,7 +23,7 @@ import {SessionStorageService} from "../../../core-module/core.module";
 import {UIConstants} from "../../../core-module/ui/ui-constants";
 import {MdsComponent} from "../../../common/ui/mds/mds.component";
 import {TranslateService} from "@ngx-translate/core";
-import {ColorHelper} from '../../../core-module/ui/color-helper';
+import {ColorHelper, PreferredColor} from '../../../core-module/ui/color-helper';
 import {DomSanitizer} from "@angular/platform-browser";
 import {TemporaryStorageService} from "../../../core-module/core.module";
 import {RegisterResetPasswordComponent} from "../../register/register-reset-password/register-reset-password.component";
@@ -516,8 +516,9 @@ export class CollectionNewComponent {
       this.save3(collection);
     }
   }
+
     public isBrightColor() {
-        return ColorHelper.getColorBrightness(this.currentCollection.collection.color)>ColorHelper.BRIGHTNESS_THRESHOLD_COLLECTIONS;
+        return ColorHelper.getColorBrightness(this.currentCollection.collection.color) === PreferredColor.White;
     }
     private save3(collection:EduData.Node) {
     if(this.newCollectionType==RestConstants.GROUP_TYPE_EDITORIAL){
