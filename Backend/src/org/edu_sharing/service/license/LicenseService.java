@@ -71,7 +71,7 @@ public class LicenseService {
 			}
 
 			if(result.contains("${locale}")){
-				result = result.replace("${locale}", country);
+				result = result.replace("${locale}", country.toLowerCase());
 			}
 		}
 		
