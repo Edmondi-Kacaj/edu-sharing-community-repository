@@ -1,11 +1,6 @@
 import { Directive, EventEmitter, Injectable, Input, OnDestroy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import {
-    FacetsDict,
-    MdsService,
-    MdsViewRelation,
-    ConfigService
-} from 'ngx-edu-sharing-api';
+import { ConfigService, FacetsDict, MdsService, MdsViewRelation } from 'ngx-edu-sharing-api';
 import {
     BehaviorSubject,
     combineLatest,
@@ -28,9 +23,7 @@ import {
 import { SearchService } from '../../../modules/search/search.service';
 import { BulkBehavior } from '../mds/mds.component';
 import { MdsEditorCommonService } from './mds-editor-common.service';
-import {
-    NativeWidgetComponent
-} from './mds-editor-view/mds-editor-view.component';
+import { NativeWidgetComponent } from './mds-editor-view/mds-editor-view.component';
 import {
     BulkMode,
     EditorBulkMode,
@@ -222,7 +215,10 @@ export class MdsEditorInstanceService implements OnDestroy {
             }
         }
 
-        private replaceVariableString(str: string, variables: { [key: string]: string } = this.variables) {
+        private replaceVariableString(
+            str: string,
+            variables: { [key: string]: string } = this.variables,
+        ) {
             if (!str || !str.match('\\${.+}')) {
                 return str;
             }
@@ -679,10 +675,11 @@ export class MdsEditorInstanceService implements OnDestroy {
                                 ),
                         )
                         // Filter out widgets that are not shown to the user.
-                        .filter((widget) => (
-                            widget.definition.type !== MdsWidgetType.DefaultValue &&
-                            widget.definition.interactionType !== 'None'
-                        ));
+                        .filter(
+                            (widget) =>
+                                widget.definition.type !== MdsWidgetType.DefaultValue &&
+                                widget.definition.interactionType !== 'None',
+                        );
                     return combineLatest(
                         filteredWidgets.map((widget) =>
                             widget.observeHasChanged().pipe(map(() => widget)),
@@ -735,9 +732,9 @@ export class MdsEditorInstanceService implements OnDestroy {
                         .map((nativeWidget) =>
                             nativeWidget.component.hasChanges.pipe(
                                 switchMap((hasChanges) =>
-                                    // TODO: check if this nlp can happen and should be catched
-                                    // from(nativeWidget.component.getValues ? nativeWidget.component.getValues({}, null) : of({})),
-                                    from(nativeWidget.component.getValues({}, null)),
+                                    nativeWidget.component.getValues
+                                        ? from(nativeWidget.component.getValues({}, null))
+                                        : of({}),
                                 ),
                             ),
                         ),
@@ -812,20 +809,21 @@ export class MdsEditorInstanceService implements OnDestroy {
         mdsId: string = '-default-',
         repository: string = '-home-',
         editorMode: EditorMode = 'search',
-        initialValues?: Values,
+        initialValues: Values = {},
     ): Promise<EditorType> {
         this.editorMode = editorMode;
         this.editorBulkMode = { isBulk: false };
         this.values$.next(initialValues);
-        await this.initMds(groupId, mdsId, repository, null, initialValues);
-        if(initialValues) {
-            for (const widget of this.widgets.value) {
-                widget.initWithValues(initialValues);
-            }
-            for (const widget of this.nativeWidgets.value) {
-                if (widget instanceof MdsEditorWidgetCore) {
-                    (widget as MdsEditorWidgetCore).widget.initWithValues(initialValues);
-                }
+        const hasInitialized = await this.initMds(groupId, mdsId, repository, null, initialValues);
+        if (!hasInitialized) {
+            return null;
+        }
+        for (const widget of this.widgets.value) {
+            widget.initWithValues(initialValues);
+        }
+        for (const widget of this.nativeWidgets.value) {
+            if (widget instanceof MdsEditorWidgetCore) {
+                (widget as MdsEditorWidgetCore).widget.initWithValues(initialValues);
             }
         }
 
@@ -1358,7 +1356,7 @@ export class MdsEditorInstanceService implements OnDestroy {
             }),
         );
         // update current values to propagate to @MdsWidgetComponent
-        if(this.nodes$.value.length === 1) {
+        if (this.nodes$.value.length === 1) {
             this.values$.next(this.nodes$.value[0].properties);
         }
     }
