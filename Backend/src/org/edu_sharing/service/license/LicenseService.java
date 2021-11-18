@@ -57,11 +57,19 @@ public class LicenseService {
 		
 		if(result != null){
 			version = (version == null) ? "3.0" : version;
+			String country = (locale == null) ? "en" : locale.split("_")[0];
 			if(result.contains("${version}")){
 				result = result.replace("${version}", version);
 			}
-			
-			String country = (locale == null) ? "en" : locale.split("_")[0];
+			// for versions < 4.0 we must use the ported version
+			if (version.equals("3.0") || version.equals("2.0") || version.equals("1.0")) {
+				result = result.replace("${jurisdiction}", country.toLowerCase());
+			}
+			// for versions >= 4.0 we must use the  Internacional version
+			if (version.equals("4.0")) {
+				result = result.replace("${jurisdiction}/", "");
+			}
+
 			if(result.contains("${locale}")){
 				result = result.replace("${locale}", country);
 			}
