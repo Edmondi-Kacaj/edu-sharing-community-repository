@@ -64,6 +64,7 @@ import org.elasticsearch.search.suggest.SuggestBuilders;
 import org.elasticsearch.search.suggest.phrase.DirectCandidateGeneratorBuilder;
 import org.elasticsearch.search.suggest.phrase.PhraseSuggestion;
 import org.elasticsearch.search.suggest.phrase.PhraseSuggestionBuilder;
+import org.elasticsearch.search.suggest.phrase.SmoothingModel;
 import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
@@ -307,7 +308,8 @@ public class SearchServiceElastic extends SearchServiceImpl {
                                             .confidence((float)0.9)
                                             .highlight("<em>","</em>")
                                             .addCandidateGenerator(new DirectCandidateGeneratorBuilder("properties.cclom:title.trigram")
-                                            .suggestMode("always"))
+                                            .suggestMode("popular"))
+                                            .smoothingModel( new org.elasticsearch.search.suggest.phrase.Laplace(0.5))
                                               );
                     searchSourceBuilder.suggest(suggest);
                 }
@@ -346,6 +348,7 @@ public class SearchServiceElastic extends SearchServiceImpl {
             logger.info("permission stuff took:"+(System.currentTimeMillis() - millisPerm));
 
             List<NodeSearch.Facet> facetsResult = new ArrayList<>();
+            List<NodeSearch.Facet> facetsResultSelected = new ArrayList<>();
 
             Long total = null;
 
@@ -354,6 +357,7 @@ public class SearchServiceElastic extends SearchServiceImpl {
                 aggregations.addAll(searchResponseAggregations.getAggregations().asList());
             }
             if(searchResponse.getAggregations() != null) aggregations.addAll(searchResponse.getAggregations().asList());
+
            for(Aggregation a : aggregations){
                if(a instanceof  ParsedStringTerms) {
                    ParsedStringTerms pst = (ParsedStringTerms) a;
@@ -371,13 +375,47 @@ public class SearchServiceElastic extends SearchServiceImpl {
                    for(Aggregation aggregation : pf.getAggregations().asList()){
                       if(aggregation instanceof ParsedStringTerms){
                           ParsedStringTerms pst = (ParsedStringTerms) aggregation;
-                          facetsResult.add(getFacet(pst));
+                          if(a.getName().endsWith("_selected")){
+                              facetsResultSelected.add(getFacet(pst));
+                          }else{
+                              facetsResult.add(getFacet(pst));
+                          }
                       }
                    }
                }else{
                    logger.error("non supported aggreagtion "+a.getName());
                }
            }
+            /**
+             * add selected when missing
+             */
+            for(String facet : searchToken.getFacets()){
+                if(!criterias.containsKey(facet)){
+                    continue;
+                }
+                for(String value : criterias.get(facet)){
+                    Optional<NodeSearch.Facet> facetResult = facetsResult.stream()
+                            .filter(f -> f.getProperty().equals(facet)).findFirst();
+                    Optional<NodeSearch.Facet> selected = facetsResultSelected
+                            .stream()
+                            .filter(f ->
+                                    f.getProperty().equals(facet))
+                            .findFirst();
+                    if(selected.isPresent()) {
+                        if (facetResult.isPresent()) {
+                            if (!facetResult.get().getValues().stream().anyMatch(v -> v.getValue().equals(value))) {
+                                if (selected.get().getValues().stream().anyMatch(v -> value.equals(v.getValue()))) {
+                                    facetResult.get().getValues().addAll(selected.get().getValues());
+                                }
+                            }
+                        } else {
+                            if (selected.get().getValues().stream().anyMatch(v -> value.equals(v.getValue()))) {
+                                facetsResult.add(selected.get());
+                            }
+                        }
+                    }
+                }
+            }
 
            if(searchResponse.getSuggest() != null) {
                PhraseSuggestion phraseSuggestion = searchResponse.getSuggest().getSuggestion("ngsearchword");
