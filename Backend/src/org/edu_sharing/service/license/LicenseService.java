@@ -25,34 +25,7 @@ public class LicenseService {
 	public String getLicenseUrl(String license, String locale, String version){
 		if(license==null || license.isEmpty())
 			return null;
-		String result = null;
-		if (license.equals(CCConstants.COMMON_LICENSE_CC_BY)) {
-			result = CCConstants.COMMON_LICENSE_CC_BY_LINK;
-		}
-		if (license.equals(CCConstants.COMMON_LICENSE_CC_ZERO)) {
-			result = CCConstants.COMMON_LICENSE_CC_ZERO_LINK;
-		}
-		if (license.equals(CCConstants.COMMON_LICENSE_CC_BY_NC)) {
-			result = CCConstants.COMMON_LICENSE_CC_BY_NC_LINK;
-		}
-		if (license.equals(CCConstants.COMMON_LICENSE_CC_BY_NC_ND)) {
-			result = CCConstants.COMMON_LICENSE_CC_BY_NC_ND_LINK;
-		}
-		if (license.equals(CCConstants.COMMON_LICENSE_CC_BY_NC_SA)) {
-			result = CCConstants.COMMON_LICENSE_CC_BY_NC_SA_LINK;
-		}
-		if (license.equals(CCConstants.COMMON_LICENSE_CC_BY_ND)) {
-			result = CCConstants.COMMON_LICENSE_CC_BY_ND_LINK;
-		}
-		if (license.equals(CCConstants.COMMON_LICENSE_CC_BY_SA)) {
-			result = CCConstants.COMMON_LICENSE_CC_BY_SA_LINK;
-		}
-		if (license.equals(CCConstants.COMMON_LICENSE_EDU_NC)) {
-			result = CCConstants.COMMON_LICENSE_EDU_LINK;
-		}
-		if (license.equals(CCConstants.COMMON_LICENSE_EDU_NC_ND)) {
-			result = CCConstants.COMMON_LICENSE_EDU_LINK;
-		}
+		String result = this.buildLicenseUrl(license);
 		if(result != null){
 			// if no jurisdiction is given, remove it from the url
 			if (result.contains("${jurisdiction}")) {
@@ -81,35 +54,7 @@ public class LicenseService {
 		if (jurisdiction == null || jurisdiction.isEmpty() || version.equals("4.0"))
 			return this.getLicenseUrl(license, locale, version);
 
-		String result = null;
-		if (license.equals(CCConstants.COMMON_LICENSE_CC_BY)) {
-			result = CCConstants.COMMON_LICENSE_CC_BY_LINK;
-		}
-		if (license.equals(CCConstants.COMMON_LICENSE_CC_ZERO)) {
-			result = CCConstants.COMMON_LICENSE_CC_ZERO_LINK;
-		}
-		if (license.equals(CCConstants.COMMON_LICENSE_CC_BY_NC)) {
-			result = CCConstants.COMMON_LICENSE_CC_BY_NC_LINK;
-		}
-		if (license.equals(CCConstants.COMMON_LICENSE_CC_BY_NC_ND)) {
-			result = CCConstants.COMMON_LICENSE_CC_BY_NC_ND_LINK;
-		}
-		if (license.equals(CCConstants.COMMON_LICENSE_CC_BY_NC_SA)) {
-			result = CCConstants.COMMON_LICENSE_CC_BY_NC_SA_LINK;
-		}
-		if (license.equals(CCConstants.COMMON_LICENSE_CC_BY_ND)) {
-			result = CCConstants.COMMON_LICENSE_CC_BY_ND_LINK;
-		}
-		if (license.equals(CCConstants.COMMON_LICENSE_CC_BY_SA)) {
-			result = CCConstants.COMMON_LICENSE_CC_BY_SA_LINK;
-		}
-		if (license.equals(CCConstants.COMMON_LICENSE_EDU_NC)) {
-			result = CCConstants.COMMON_LICENSE_EDU_LINK;
-		}
-
-		if (license.equals(CCConstants.COMMON_LICENSE_EDU_NC_ND)) {
-			result = CCConstants.COMMON_LICENSE_EDU_LINK;
-		}
+		String result = this.buildLicenseUrl(license);
 
 		if(result != null){
 
@@ -126,5 +71,43 @@ public class LicenseService {
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * @param license, the license  to check example : CC_BY_NC
+	 * @return String , the license link example: https://creativecommons.org/licenses/by-nc/${version}/${jurisdiction}/deed.${locale} || null if no license is available
+	 */
+	private String buildLicenseUrl(String license){
+		if(license==null || license.isEmpty())
+			return null;
+		if (license.equals(CCConstants.COMMON_LICENSE_CC_BY)) {
+			return CCConstants.COMMON_LICENSE_CC_BY_LINK;
+		}
+		if (license.equals(CCConstants.COMMON_LICENSE_CC_ZERO)) {
+			return CCConstants.COMMON_LICENSE_CC_ZERO_LINK;
+		}
+		if (license.equals(CCConstants.COMMON_LICENSE_CC_BY_NC)) {
+			return CCConstants.COMMON_LICENSE_CC_BY_NC_LINK;
+		}
+		if (license.equals(CCConstants.COMMON_LICENSE_CC_BY_NC_ND)) {
+			return CCConstants.COMMON_LICENSE_CC_BY_NC_ND_LINK;
+		}
+		if (license.equals(CCConstants.COMMON_LICENSE_CC_BY_NC_SA)) {
+			return CCConstants.COMMON_LICENSE_CC_BY_NC_SA_LINK;
+		}
+		if (license.equals(CCConstants.COMMON_LICENSE_CC_BY_ND)) {
+			return CCConstants.COMMON_LICENSE_CC_BY_ND_LINK;
+		}
+		if (license.equals(CCConstants.COMMON_LICENSE_CC_BY_SA)) {
+			return CCConstants.COMMON_LICENSE_CC_BY_SA_LINK;
+		}
+		if (license.equals(CCConstants.COMMON_LICENSE_EDU_NC)) {
+			return CCConstants.COMMON_LICENSE_EDU_LINK;
+		}
+
+		if (license.equals(CCConstants.COMMON_LICENSE_EDU_NC_ND)) {
+			return CCConstants.COMMON_LICENSE_EDU_LINK;
+		}
+		return null;
 	}
 }
