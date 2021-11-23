@@ -21,7 +21,7 @@ public class LicenseService {
 	public String getLicenseUrl(String license, String locale){
 		return getLicenseUrl(license, locale, null);
 	}
-	
+
 	public String getLicenseUrl(String license, String locale, String version){
 		if(license==null || license.isEmpty())
 			return null;
@@ -50,32 +50,81 @@ public class LicenseService {
 		if (license.equals(CCConstants.COMMON_LICENSE_EDU_NC)) {
 			result = CCConstants.COMMON_LICENSE_EDU_LINK;
 		}
-		
 		if (license.equals(CCConstants.COMMON_LICENSE_EDU_NC_ND)) {
 			result = CCConstants.COMMON_LICENSE_EDU_LINK;
 		}
-		
 		if(result != null){
+			// if no jurisdiction is given, remove it from the url
+			if (result.contains("${jurisdiction}")) {
+				result = result.replace("${jurisdiction}/", "");
+			}
 			version = (version == null) ? "3.0" : version;
-			String country = (locale == null) ? "en" : locale.split("_")[0];
 			if(result.contains("${version}")){
 				result = result.replace("${version}", version);
 			}
-			// for versions < 4.0 we must use the ported version
-			if (version.equals("3.0") || version.equals("2.0") || version.equals("1.0")) {
-				result = result.replace("${jurisdiction}", country.toLowerCase());
+			locale = (locale == null) ? "en" : locale.split("_")[0];
+			if(result.contains("${locale}")){
+				result = result.replace("${locale}", locale.toLowerCase());
 			}
-			// for versions >= 4.0 we must use the  Internacional version
-			if (version.equals("4.0")) {
-				result = result.replace("${jurisdiction}/", "");
+		}
+		return result;
+	}
+
+	public String getLicenseUrl(String license, String locale, String version, String jurisdiction){
+		if(license==null || license.isEmpty())
+			return null;
+
+		version = (version == null) ? "3.0" : version;
+		locale = (locale == null) ? "en" : locale.split("_")[0];
+
+		// If no jurisdiction is given or version is 4.0, call the getLicenseUrl method without jurisdiction
+		if (jurisdiction == null || jurisdiction.isEmpty() || version.equals("4.0"))
+			return this.getLicenseUrl(license, locale, version);
+
+		String result = null;
+		if (license.equals(CCConstants.COMMON_LICENSE_CC_BY)) {
+			result = CCConstants.COMMON_LICENSE_CC_BY_LINK;
+		}
+		if (license.equals(CCConstants.COMMON_LICENSE_CC_ZERO)) {
+			result = CCConstants.COMMON_LICENSE_CC_ZERO_LINK;
+		}
+		if (license.equals(CCConstants.COMMON_LICENSE_CC_BY_NC)) {
+			result = CCConstants.COMMON_LICENSE_CC_BY_NC_LINK;
+		}
+		if (license.equals(CCConstants.COMMON_LICENSE_CC_BY_NC_ND)) {
+			result = CCConstants.COMMON_LICENSE_CC_BY_NC_ND_LINK;
+		}
+		if (license.equals(CCConstants.COMMON_LICENSE_CC_BY_NC_SA)) {
+			result = CCConstants.COMMON_LICENSE_CC_BY_NC_SA_LINK;
+		}
+		if (license.equals(CCConstants.COMMON_LICENSE_CC_BY_ND)) {
+			result = CCConstants.COMMON_LICENSE_CC_BY_ND_LINK;
+		}
+		if (license.equals(CCConstants.COMMON_LICENSE_CC_BY_SA)) {
+			result = CCConstants.COMMON_LICENSE_CC_BY_SA_LINK;
+		}
+		if (license.equals(CCConstants.COMMON_LICENSE_EDU_NC)) {
+			result = CCConstants.COMMON_LICENSE_EDU_LINK;
+		}
+
+		if (license.equals(CCConstants.COMMON_LICENSE_EDU_NC_ND)) {
+			result = CCConstants.COMMON_LICENSE_EDU_LINK;
+		}
+
+		if(result != null){
+
+			if(result.contains("${version}")){
+				result = result.replace("${version}", version);
+			}
+
+			if (result.contains("${jurisdiction}")) {
+				result = result.replace("${jurisdiction}", jurisdiction.toLowerCase());
 			}
 
 			if(result.contains("${locale}")){
-				result = result.replace("${locale}", country.toLowerCase());
+				result = result.replace("${locale}", locale.toLowerCase());
 			}
 		}
-		
 		return result;
 	}
-		
 }
