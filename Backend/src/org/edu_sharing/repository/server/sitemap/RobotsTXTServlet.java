@@ -1,14 +1,14 @@
 package org.edu_sharing.repository.server.sitemap;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.util.StreamUtils;
+import org.edu_sharing.alfresco.lightbend.LightbendConfigLoader;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.nio.charset.Charset;
 
 
 public class RobotsTXTServlet extends HttpServlet{
@@ -19,8 +19,8 @@ public class RobotsTXTServlet extends HttpServlet{
             throws ServletException, IOException {
         try {
 
-            String robots=StreamUtils.copyToString(getClass().getResourceAsStream("robots.txt.properties"), Charset.forName("UTF-8"));
-            robots=robots.replace("{{sitemap}}",req.getRequestURL().toString().replace("robots.txt","eduservlet/sitemap"));
+            String robots = StringUtils.join(LightbendConfigLoader.get().getStringList("angular.robots"), "\n");
+            robots = robots.replace("{{sitemap}}",req.getRequestURL().toString().replace("robots.txt","eduservlet/sitemap"));
             resp.getOutputStream().print(robots);
         } catch (Throwable t) {
             t.printStackTrace();
