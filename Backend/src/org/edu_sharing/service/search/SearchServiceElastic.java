@@ -246,6 +246,16 @@ public class SearchServiceElastic extends SearchServiceImpl {
 
             BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
             BoolQueryBuilder filterBuilder = QueryBuilders.boolQuery().must(metadataQueryBuilderFilter).must(queryBuilderGlobalConditions);
+            if(searchToken.getSearchCriterias().getContentkind() != null && searchToken.getSearchCriterias().getContentkind().length > 0){
+                BoolQueryBuilder criteriasBool = new BoolQueryBuilder();
+                Arrays.stream(searchToken.getSearchCriterias().getContentkind()).forEach((content) ->
+                        criteriasBool.should(
+                                new MatchQueryBuilder("type", CCConstants.getValidLocalName(content)))
+                );
+                queryBuilder = queryBuilder.filter(
+                        criteriasBool
+                );
+            }
             queryBuilder = queryBuilder.filter(filterBuilder);
             queryBuilder = queryBuilder.must(metadataQueryBuilderAsQuery);
 
@@ -389,28 +399,30 @@ public class SearchServiceElastic extends SearchServiceImpl {
             /**
              * add selected when missing
              */
-            for(String facet : searchToken.getFacets()){
-                if(!criterias.containsKey(facet)){
-                    continue;
-                }
-                for(String value : criterias.get(facet)){
-                    Optional<NodeSearch.Facet> facetResult = facetsResult.stream()
-                            .filter(f -> f.getProperty().equals(facet)).findFirst();
-                    Optional<NodeSearch.Facet> selected = facetsResultSelected
-                            .stream()
-                            .filter(f ->
-                                    f.getProperty().equals(facet))
-                            .findFirst();
-                    if(selected.isPresent()) {
-                        if (facetResult.isPresent()) {
-                            if (!facetResult.get().getValues().stream().anyMatch(v -> v.getValue().equals(value))) {
-                                if (selected.get().getValues().stream().anyMatch(v -> value.equals(v.getValue()))) {
-                                    facetResult.get().getValues().addAll(selected.get().getValues());
+            if(searchToken != null && searchToken.getFacets() != null && searchToken.getFacets().size() > 0) {
+                for (String facet : searchToken.getFacets()) {
+                    if (!criterias.containsKey(facet)) {
+                        continue;
+                    }
+                    for (String value : criterias.get(facet)) {
+                        Optional<NodeSearch.Facet> facetResult = facetsResult.stream()
+                                .filter(f -> f.getProperty().equals(facet)).findFirst();
+                        Optional<NodeSearch.Facet> selected = facetsResultSelected
+                                .stream()
+                                .filter(f ->
+                                        f.getProperty().equals(facet))
+                                .findFirst();
+                        if (selected.isPresent()) {
+                            if (facetResult.isPresent()) {
+                                if (!facetResult.get().getValues().stream().anyMatch(v -> v.getValue().equals(value))) {
+                                    if (selected.get().getValues().stream().anyMatch(v -> value.equals(v.getValue()))) {
+                                        facetResult.get().getValues().addAll(selected.get().getValues());
+                                    }
                                 }
-                            }
-                        } else {
-                            if (selected.get().getValues().stream().anyMatch(v -> value.equals(v.getValue()))) {
-                                facetsResult.add(selected.get());
+                            } else {
+                                if (selected.get().getValues().stream().anyMatch(v -> value.equals(v.getValue()))) {
+                                    facetsResult.add(selected.get());
+                                }
                             }
                         }
                     }
@@ -736,7 +748,7 @@ public class SearchServiceElastic extends SearchServiceImpl {
 
 
         eduNodeRef.setPermissions(permissions);
-
+        boolean isProposal = sourceAsMap.get("type").equals(CCConstants.getValidLocalName(CCConstants.CCM_TYPE_COLLECTION_PROPOSAL));
         if(resolveCollections) {
             List<Map<String, Object>> collections = (List) sourceAsMap.get("collections");
             if (collections != null) {
@@ -754,10 +766,19 @@ public class SearchServiceElastic extends SearchServiceImpl {
                     }
                     if (hasPermission) {
                         CollectionRefImpl transform = transform(CollectionRefImpl.class, authorities, user, collection, false);
+                        if(isProposal) {
+                            transform.setRelationType(CollectionRef.RelationType.Proposal);
+                        }
                         eduNodeRef.getUsedInCollections().add(transform);
                     }
                 }
             }
+        }
+        if(isProposal && sourceAsMap.containsKey("original")) {
+            eduNodeRef.getRelations().put(
+                    NodeRefImpl.Relation.Original,
+                    transform(NodeRefImpl.class, authorities, user, (Map) sourceAsMap.get("original"), false)
+            );
         }
         if(eduNodeRef instanceof CollectionRefImpl) {
             CollectionRefImpl collectionRef = (CollectionRefImpl) eduNodeRef;
