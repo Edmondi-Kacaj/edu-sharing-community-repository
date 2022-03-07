@@ -22,6 +22,8 @@ import {MainNavComponent} from '../../common/ui/main-nav/main-nav.component';
 import {Helper} from '../../core-module/rest/helper';
 import {GlobalContainerComponent} from '../../common/ui/global-container/global-container.component';
 import {DefaultGroups, OptionGroup, OptionItem} from '../../core-ui-module/option-item';
+import {UIHelper} from "../../core-ui-module/ui-helper";
+import {OPEN_URL_MODE} from "../../core-module/ui/ui-constants";
 
 @Component({
   selector: 'es-profiles',
@@ -45,6 +47,7 @@ export class ProfilesComponent {
       route.params.subscribe((params)=> {
         this.editProfileUrl=this.config.instant('editProfileUrl');
         this.editProfile=this.config.instant('editProfile',true);
+        this.activateExternalLinkInProfile=this.config.instant('activateExternalLinkInProfile',false);
         this.loadUser(params.authority);
         this.getProfileSetting(params.authority);
       });
@@ -79,6 +82,7 @@ export class ProfilesComponent {
   actions: OptionItem[];
   private editAction: OptionItem;
   showPersistentIds = false;
+  public activateExternalLinkInProfile = false;
   public loadUser(authority:string) {
     this.toast.showProgressDialog();
     this.connector.isLoggedIn().subscribe((login)=> {
@@ -241,6 +245,16 @@ export class ProfilesComponent {
 
   savePersistentIds() {
     this.saveEdits();
+  }
+
+  /**
+   * Open external link, in another tab
+   * @param url (String)  url to open
+   */
+  openExternalLink(url: string) {
+    if (url && url.length > 0) {
+     UIHelper.openUrl(url, this.connector.getBridgeService(), OPEN_URL_MODE.Blank);
+    }
   }
 }
 
