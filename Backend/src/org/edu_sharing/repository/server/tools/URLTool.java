@@ -186,6 +186,9 @@ public class URLTool{
 		}
 		return baseUrl;
 	}
+	public static String getNgProfileUrl(String userId){
+		return getNgComponentsUrl()+"profiles/"+userId;
+	}
 	public static String getNgMessageUrl(String messageId){
 		return getNgComponentsUrl()+"messages/"+messageId;
 	}

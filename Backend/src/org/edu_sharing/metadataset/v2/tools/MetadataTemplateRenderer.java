@@ -280,10 +280,13 @@ public class MetadataTemplateRenderer {
 						value = renderWidgetValue(widget, value);
 						boolean isLink = false;
 						// do not use global link for vcard, they handle links seperately
-						if (!widget.getType().equals("vcard") && widget.getLink() != null && !widget.getLink().isEmpty() && renderingMode.equals(RenderingMode.HTML)) {
+						if (!widget.getType().equals("vcard") && widget.getLink() != null && !widget.getLink().isEmpty() && widget.getLink().equals("_BLANK") && renderingMode.equals(RenderingMode.HTML)) {
 							widgetHtml.append("<a href=\"").append(value).append("\" target=\"").append(widget.getLink()).append("\">");
 							isLink = true;
-						} else if (vcardData != null) {
+						}else if (!widget.getType().equals("vcard") && widget.getLink() != null && !widget.getLink().isEmpty() && widget.getLink().toUpperCase().equals("PROFILE") && renderingMode.equals(RenderingMode.HTML)) {
+							widgetHtml.append("<a href=\"").append(URLTool.getNgProfileUrl(value)).append("\" target=\"").append("_blank").append("\">");
+							isLink = true;
+						}else if (vcardData != null) {
 							value = VCardConverter.getNameForVCard("", vcardData);
 						}
 						if (renderingMode.equals(RenderingMode.HTML)) {
