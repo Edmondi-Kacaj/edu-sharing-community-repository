@@ -53,12 +53,14 @@ public class MetadataTemplateRenderer {
 	private NodeRef nodeRef;
 	private MetadataSet mds;
 	private Map<String, String[]> properties;
+	private String createdOrModifiedBy;
 	private static Logger logger=Logger.getLogger(MetadataTemplateRenderer.class);
 
 	public MetadataTemplateRenderer(MetadataSet mds, NodeRef nodeRef, String userName, String type, List<String> aspects, Map<String, Object> properties) {
 		this.mds = mds;
 		this.nodeRef = nodeRef;
 		this.userName = userName;
+		this.createdOrModifiedBy = this.getCreatedOrModifiedBy(properties);
 		this.properties = cleanupTextMultivalueProperties(
 				convertProps(
 						NodeServiceHelper.addVirtualProperties(
@@ -321,7 +323,11 @@ public class MetadataTemplateRenderer {
 								isLink = true;
 							}
 						}
-						widgetHtml.append(value);
+						if (!widget.getType().equals("vcard") && widget.getLink() != null && !widget.getLink().isEmpty() && widget.getLink().toUpperCase().equals("PROFILE") && renderingMode.equals(RenderingMode.HTML))
+							widgetHtml.append(this.createdOrModifiedBy);
+						else
+						    widgetHtml.append(value);
+
 						if (vcardData != null && renderingMode.equals(RenderingMode.HTML)) {
 							if (isLink) {
 								widgetHtml.append("</a>");
@@ -781,4 +787,12 @@ public class MetadataTemplateRenderer {
 		return "<i class='material-icons'>"+name+"</i>";
 	}
 
+	private String getCreatedOrModifiedBy(Map<String, Object> properties) {
+		if (properties.containsKey(CCConstants.NODECREATOR_FIRSTNAME) && properties.containsKey(CCConstants.NODECREATOR_LASTNAME)) {
+			return properties.get(CCConstants.NODECREATOR_FIRSTNAME) + " " + properties.get(CCConstants.NODECREATOR_LASTNAME);
+		} else if (properties.containsKey(CCConstants.NODEMODIFIER_FIRSTNAME) && properties.containsKey(CCConstants.NODEMODIFIER_LASTNAME)) {
+			return properties.get(CCConstants.NODEMODIFIER_FIRSTNAME) + " " + properties.get(CCConstants.NODEMODIFIER_LASTNAME);
+		}
+		return "";
+	}
 }
