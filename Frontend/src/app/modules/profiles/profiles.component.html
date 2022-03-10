@@ -53,6 +53,29 @@
           <!--<div>{{'USER.authorityName' | translate}}: {{ user.authorityName }}</div>-->
           <!--</div>-->
         </div>
+        <br/>
+        <div *ngIf="!edit && activateExternalLinkInProfile">
+          <button
+            *ngIf="userEdit.profile.vcard.orcid"
+            mat-button
+            class="external-link"
+            matTooltip="{{'WORKSPACE.CONTRIBUTOR.EXTERNAL_PROFILE_LINK' | translate: {name: 'ORCID'} }}"
+            (click)="openExternalLink(userEdit.profile.vcard.orcid)"
+          >
+            <i esIcon="fingerprint"></i>
+            <span>ORCID</span>
+          </button>
+          <button
+            *ngIf="userEdit.profile.vcard.orcid"
+            mat-button
+            class="external-link"
+            matTooltip="{{'WORKSPACE.CONTRIBUTOR.EXTERNAL_PROFILE_LINK' | translate: { name: 'GND' } }}"
+            (click)="openExternalLink(userEdit.profile.vcard.orcid)"
+          >
+            <i esIcon="public"></i>
+            <span>GND</span>
+          </button>
+        </div>
         <div *ngIf="edit">
           <div>
             <mat-form-field class="mat-form-field-bright">
