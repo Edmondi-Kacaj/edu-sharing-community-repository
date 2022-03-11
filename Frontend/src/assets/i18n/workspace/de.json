@@ -352,6 +352,8 @@
             "DELETE_TITLE": "Beteiligten entfernen",
             "DELETE_MESSAGE": "Sind Sie sicher, dass Sie den/die Beteiligten {{ name }} entfernen möchten?",
             "EXTERNAL_PROFILE_LINK": "Link zum {{name}}",
+            "ORCID": "Orcid",
+            "GND": "Gnd",
             "TYPE": {
                 "PUBLISHER": "Herausgeber{{GENDER_SEPARATOR}}in/Anbieter{{GENDER_SEPARATOR}}in",
                 "AUTHOR": "Autor{{GENDER_SEPARATOR}}in",

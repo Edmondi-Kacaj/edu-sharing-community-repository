@@ -335,6 +335,8 @@
             "DELETE_TITLE": "Remove contributor",
             "DELETE_MESSAGE": "Are you sure you want to remove {{ name }} as a contributor?",
             "EXTERNAL_PROFILE_LINK": "Go to {{name}} profile",
+            "ORCID": "Orcid",
+            "GND": "Gnd",
             "TYPE": {
                 "PUBLISHER": "Publisher",
                 "AUTHOR": "Author",
