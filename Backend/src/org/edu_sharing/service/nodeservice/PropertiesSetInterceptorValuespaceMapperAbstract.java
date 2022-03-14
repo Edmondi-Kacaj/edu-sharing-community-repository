@@ -71,13 +71,13 @@ public class PropertiesSetInterceptorValuespaceMapperAbstract implements Propert
         }
         List<Map<String, Collection<MetadataKey.MetadataKeyRelated>>> mappedList = relations.stream().map((m) -> relationCache.get(m)).collect(Collectors.toList());
         HashSet<String> result = MigrateMetadataValuespaceJob.mapValueToTarget(context.getNodeRef(),
-                        mappedList,
-                        targetWidget.getValues(),
-                        mode,
-                        value,
-                        map.get(targetProperty),
-                        reverseMapping,
-                        null
+                mappedList,
+                targetWidget.getValues(),
+                mode,
+                value,
+                map.get(targetProperty),
+                reverseMapping,
+                null
         );
         if(result.size() == 0) {
             result = null;
