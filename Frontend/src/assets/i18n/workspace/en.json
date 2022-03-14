@@ -334,9 +334,7 @@
             "ERROR_ORG_NAME": "Please enter the contributors organization",
             "DELETE_TITLE": "Remove contributor",
             "DELETE_MESSAGE": "Are you sure you want to remove {{ name }} as a contributor?",
-            "EXTERNAL_PROFILE_LINK": "Go to {{name}} profile",
-            "ORCID": "Orcid",
-            "GND": "Gnd",
+            "EXTERNAL_PROFILE_LINK": "Go to profile",
             "TYPE": {
                 "PUBLISHER": "Publisher",
                 "AUTHOR": "Author",

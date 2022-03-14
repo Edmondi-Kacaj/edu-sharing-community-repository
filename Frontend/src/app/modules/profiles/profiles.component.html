@@ -59,21 +59,21 @@
             *ngIf="userEdit.profile.vcard.orcid"
             mat-button
             class="external-link"
-            matTooltip="{{'WORKSPACE.CONTRIBUTOR.EXTERNAL_PROFILE_LINK' | translate: {name: 'ORCID'} }}"
+            matTooltip="{{'WORKSPACE.CONTRIBUTOR.EXTERNAL_PROFILE_LINK' | translate}}"
             (click)="openExternalLink(userEdit.profile.vcard.orcid)"
           >
             <i esIcon="fingerprint"></i>
-            <span>{{'WORKSPACE.CONTRIBUTOR.ORCID' | translate}}</span>
+            <span>{{'VCARD.X-ORCID' | translate}}</span>
           </button>
           <button
             *ngIf="userEdit.profile.vcard.gnduri"
             mat-button
             class="external-link"
-            matTooltip="{{'WORKSPACE.CONTRIBUTOR.EXTERNAL_PROFILE_LINK' | translate: { name: 'GND' } }}"
+            matTooltip="{{'WORKSPACE.CONTRIBUTOR.EXTERNAL_PROFILE_LINK' | translate}}"
             (click)="openExternalLink(userEdit.profile.vcard.gnduri)"
           >
             <i esIcon="public"></i>
-            <span>{{'WORKSPACE.CONTRIBUTOR.GND' | translate}}</span>
+            <span>{{'VCARD.X-GND-URI' | translate}}</span>
           </button>
         </div>
         <div *ngIf="edit">
